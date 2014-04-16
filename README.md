@@ -40,30 +40,31 @@ You are done!
 
 DEMO CODE
 =========
-import com.javagotos.gotos.Goto;
-import com.javagotos.gotos.transformers.GotoLoader;
 
-public class Example1 extends Goto implements Runnable {
-
-    public void run() {
-        int x = 0;
-        label(0);
-
-        if (x > 0) {
-            System.out.println("We jumped back to label 0 before reaching this code!");
-            jump(1);
+        import com.javagotos.gotos.Goto;
+        import com.javagotos.gotos.transformers.GotoLoader;
+        
+        public class Example1 extends Goto implements Runnable {
+        
+            public void run() {
+                int x = 0;
+                label(0);
+        
+                if (x > 0) {
+                    System.out.println("We jumped back to label 0 before reaching this code!");
+                    jump(1);
+                }
+        
+                x++;
+                jump(0);
+                label(1);
+            }
+        
+            public static void main(String args[]) throws Exception  {
+                Runnable demo = (Runnable) GotoLoader.newInstance(Example1.class.getName());
+                demo.run();
+            }
         }
-
-        x++;
-        jump(0);
-        label(1);
-    }
-
-    public static void main(String args[]) throws Exception  {
-        Runnable demo = (Runnable) GotoLoader.newInstance(Example1.class.getName());
-        demo.run();
-    }
-}
 
 
 For-loop and do-while loop behavior with Gotos
