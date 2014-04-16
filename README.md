@@ -9,7 +9,7 @@ Using JavaGoto, substitute these statements for traditional gotos use:
 ----------------------------------------------------------------------
 
 * Gotos            -- Instead of **goto [number]** , use **jump(number);**.
-* Labels           -- Instead of **label [number]**, use **label(number);*.
+* Labels           -- Instead of **label [number]**, use **label(number);**.
 
 Labels and jumps must have set integer values, such as: label(12), jump(12), etc.
 
@@ -18,7 +18,7 @@ Advanced use:
 
 * Computed gotos   -- Use **multijump(n,10,20,30 …)** where 'n' is the index that can change at runtime.
 
-* Multiple returns -- the use of a label followed by an 'if(yes()){return;}' will allow code to have many multiple returns after each label reached, (similar to goto:EOF after a DOS goto or a standard return after a fortran goto.
+* Multiple returns -- the use of a label followed by an **if(yes()){return;}** will allow code to have many multiple returns after each label reached, (similar to goto:EOF after a DOS goto or a standard return after a fortran goto.
 
 
 
@@ -38,8 +38,8 @@ Debuggers precisely follow the flow of all jumps and labels making flow analysis
 You are done!
 
 
-SAMPLE
-======
+DEMO CODE
+=========
 import com.javagotos.gotos.Goto;
 import com.javagotos.gotos.transformers.GotoLoader;
 
