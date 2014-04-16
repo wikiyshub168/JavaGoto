@@ -67,8 +67,8 @@ DEMO CODE
         }
 
 
-For-loop and do-while loop behavior with Gotos
-==============================================
+For-loop and do-while loop behavior
+===================================
 
 When jumping in and out of loops, the last known state of the loop-initialized variables is retained. You are free to leave and re-renter other language structures at-will.
 
@@ -94,7 +94,7 @@ When jumping in and out of loops, the last known state of the loop-initialized v
         }
 
 
-Advanced feature – Unreachable Assertion
+Feature – Unreachable Assertion
 ========================================
 If a label appears in a region of unreachable code, simply insert ‘unreachable()’ or ‘unreachable(reason)’ to assert that a code region should not be crossed (although it can be jumped across using the goto):
 
@@ -114,7 +114,7 @@ If a label appears in a region of unreachable code, simply insert ‘unreachable
         label(558);
         
         
-Advanced feature – Multiple Return Points
+Feature – Multiple Return Points
 =========================================
 
 If a label appears in a region of code after a return, the previous return will not allow the compiler to process the code as the next block of code will be unreachable. To workaround this, use the semantic ‘ if(  yes()  ) return’
