@@ -1,7 +1,7 @@
 JavaGoto
 ========
 
-A library that supports the use of goto in Java programming with some advanced goto uses and full debugging supoprt
+A library that supports the use of goto in Java programming with some advanced goto uses and full debugging support.
 
 Thanks to some bytecode modification, which can be done on-the-fly wothout special compilation, you can use simple and advanced goto constructs in Java. (Not that you should ... [evil grin] ... but now you can!
 
