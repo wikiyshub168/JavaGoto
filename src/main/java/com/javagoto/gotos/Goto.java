@@ -3,7 +3,6 @@
  * Copyright footloosejava.
  * Email: footloosejava@gmail.com
  */
-
 package com.javagoto.gotos;
 
 import java.lang.reflect.Method;
@@ -15,15 +14,10 @@ public class Goto {
     private final String name;
 
     public Goto() throws IllegalStateException {
-        name = this.toString();
-
+        name = getClass().getName() + "@" + Integer.toHexString(hashCode());
         testBasicJump();
         testMultiJumps();
         testLoopEntryExitJumps();
-
-        if (debug) {
-            System.out.println("! Ok. Class " + name + " has been processed for Gotos.");
-        }
     }
 
     /**
@@ -36,81 +30,59 @@ public class Goto {
     }
 
     private void testLoopEntryExitJumps() throws IllegalStateException {
-        boolean once = false;
-
         int j = 0;
         label(400);
 
-        for (int i = 0; i < 3; i++) {
-            if (j < 10 && debug) {
-                System.out.println("in for(...) i = " + i);
-            }
-            if (j < 500) {
+        for (int i = 0; i < 2; i++) {
+            if (j < 3) {
+                if (i != 0) {
+                    throw new IllegalStateException("! Goto class " + name
+                            + " not goto transformed!" + "\n > Reentering loop at this point, variable i should"
+                            + " equal zero: " + i);
+                }
                 j = j + 1;
                 jump(400);
+
+                // we will jump back top here and then set the exit variable j to 1024 to permit exit.
                 label(4001);
-                if (debug) {
-                    System.out.println("Value of i = " + i);
-                }
-                once = true;
-                // Jump back into loop, i should be in last state and equal to 3
-                if (i != 3) {
+                j = 1024;
+                if (i != 2) {
                     throw new IllegalStateException("! Goto class " + name
                             + " not goto transformed!" + "\n > Reentering loop, variable i should"
-                            + "equal three.");
+                            + " equal two: " + i);
                 }
             }
         }
         // lets jump back into the for(...) loop above.
-        if (!once) {
+        if (j != 1024) {
             jump(4001);
-        }
-
-        if (debug) {
-            System.out.println("! Ok. Class " + name + " has been processed for Gotos.");
         }
     }
 
     private void testMultiJumps() throws IllegalStateException {
-
-        /// try multi jumps
+        final int destinationCount = 4;
         int JMP = 0;
 
         label(27);
-        if (JMP == 8) {
+        if (JMP == destinationCount) {
             JMP++;
-            if (debug) {
-                System.out.println("finished back jump! it all works!");
-            }
             jump(666);
         }
 
         label(26);
-
         if (debug) {
             System.out.println("Trying Jump to " + JMP);
         }
-        int xxy = 10;
 
-        multiJump(JMP, 551, 552, 553, 554, 555, 556, 557, 558, 27);
+        multiJump(JMP, 551, 552, 553, 554, 27);
 
-        // the multi jump code is moelled to reproduce bytecode compatible with this
-//        if(JMP==0){
-//            jump(551);
-//        } else if(JMP==1){
-//            jump(552);
-//        } else if(JMP==2){
-//            jump(553);
-//        } else if(JMP==3){
-//            jump(554);
-//        }
-        // System.out.println("after for.. jmp=" + JMP);
-        boolean tro = true;
-        if (tro) {
-            throw new IllegalStateException("! Goto class " + name
-                    + " not goto transformed!" + "\n > "
-                    + "Jump should not appear before first target label in multiJump.");
-        }
+        // the multi jump code is modelled to reproduce bytecode compatible with this
+        //        if(JMP==0){
+        //            jump(551);
+        //        } else if(JMP==1){
+        //            jump(552);
+        //        } etc.
+        unreachable("Jump should not appear before first target label in multiJump.");
 
         label(551);
         validateMultiJumpCond(JMP, 0);
@@ -126,41 +98,21 @@ public class Goto {
 
         label(554);
         validateMultiJumpCond(JMP, 3);
-        jump(665);
-
-        label(555);
-        validateMultiJumpCond(JMP, 4);
-        jump(665);
-
-        label(556);
-        validateMultiJumpCond(JMP, 5);
-        jump(665);
-
-        label(557);
-        validateMultiJumpCond(JMP, 6);
-        jump(665);
-
-        label(558);
-        validateMultiJumpCond(JMP, 7);
 
         label(665);
-
-        JMP++;
-        if (JMP < 9) {
+        if (++JMP < destinationCount + 1) {
             jump(26);
         }
-        validateMultiJumpCond(0, 1); // alsways throw as this should never be reached
+
+        unreachable();
 
         label(666);
-        validateMultiJumpCond(JMP, 9);
+        validateMultiJumpCond(JMP, destinationCount + 1);
     }
 
     private void testBasicJump() throws IllegalStateException {
-        boolean flag = true;
-        if (flag) {
-            jump(100);
-            throw new IllegalStateException("! Goto class " + name + " not goto transformed!");
-        }
+        jump(100);
+        unreachable();
         label(100);
     }
 
@@ -196,8 +148,8 @@ public class Goto {
         return debug;
     }
 
-    public final void setGotoDebug(boolean aDebug) {
-        debug = aDebug;
+    public final void setGotoDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
@@ -209,17 +161,13 @@ public class Goto {
         return true;
     }
 
-    /**
-     *
-     * @param jump_should_not_appear_before_first_label_i
-     */
-    public static void unreachable(String message) {
+    protected static void unreachable(String message) {
         if (true == true) {
             throw new UnsupportedOperationException(message);
         }
     }
 
-    public static void unreachable() {
+    protected static void unreachable() {
         unreachable("Program error. This statement should not be reachable.");
     }
 
